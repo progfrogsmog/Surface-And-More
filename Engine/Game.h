@@ -45,5 +45,8 @@ private:
 	/*  User Variables              */
 	Surface s = {100,100};
 	Surface s2 = {100,100};
+	Surface s3 = { "dib.bmp" };
+	Surface s4 = { "dib32.bmp" };
+	Surface s5 = { "dibr.bmp" };
 	/********************************/
 };

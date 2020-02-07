@@ -60,4 +60,7 @@ void Game::ComposeFrame()
 {
 	gfx.DrawSprite(100, 100, s);
 	gfx.DrawSprite(200, 100, s2);
+	gfx.DrawSprite(300, 100, s3);
+	gfx.DrawSprite(500, 100, s4);
+	gfx.DrawSprite(100, 200, s5);
 }
