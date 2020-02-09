@@ -26,22 +26,6 @@ Game::Game( MainWindow& wnd )
 	wnd( wnd ),
 	gfx( wnd )
 {
-	for (int y = 0; y < s.GetHeight(); y++)
-	{
-		for (int x = 0; x < s.GetWidth(); x++)
-		{
-			s.PutPixel(x, y, Color(
-				(x - 25) * (x - 25) + (y - 25) * (y - 25),
-				(x - 50) * (x - 50) + (y - 50) * (y - 50),
-				(x - 75) * (x - 75) + (y - 75) * (y - 75)
-				));
-			s2.PutPixel(x, y, Color(
-				(x - 75) * (x - 75) + (y - 75) * (y - 75),
-				(x - 50) * (x - 50) + (y - 50) * (y - 50),
-				(x - 25) * (x - 25) + (y - 25) * (y - 25)
-			));
-		}
-	}
 }
 
 void Game::Go()
@@ -54,13 +38,12 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	x = wnd.mouse.GetPosX();
+	y = wnd.mouse.GetPosY();
+	link.Update(ft.Mark());
 }
 
 void Game::ComposeFrame()
 {
-	gfx.DrawSprite(100, 100, s);
-	gfx.DrawSprite(200, 100, s2);
-	gfx.DrawSprite(300, 100, s3);
-	gfx.DrawSprite(500, 100, s4);
-	gfx.DrawSprite(100, 200, s5);
+	link.Draw(x-30, y-30, gfx);
 }

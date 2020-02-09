@@ -64,10 +64,10 @@ Surface::Surface(const std::string filename)
 			pPixels[yStart*width + x] = Color( file.get(),file.get(),file.get() );
 			if (bmInfoHeader.biBitCount == 32)
 			{
-				file.get();
+				file.seekg(1,std::ios::cur);
 			}
 		}
-		if (!bmInfoHeader.biBitCount == 32)
+		if (!(bmInfoHeader.biBitCount == 32))
 		{
 			file.seekg(padding, std::ios::cur);
 		}
@@ -104,6 +104,11 @@ int Surface::GetWidth() const
 int Surface::GetHeight() const
 {
 	return height;
+}
+
+RectI Surface::GetRect() const
+{
+	return {0,width,0,height};
 }
 
 void Surface::PutPixel(int x, int y, Color c)

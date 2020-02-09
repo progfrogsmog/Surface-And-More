@@ -24,6 +24,8 @@
 #include "Mouse.h"
 #include "Graphics.h"
 #include "Surface.h"
+#include "FrameTimer.h"
+#include "Animation.h"
 
 class Game
 {
@@ -43,10 +45,10 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
-	Surface s = {100,100};
-	Surface s2 = {100,100};
-	Surface s3 = { "dib.bmp" };
-	Surface s4 = { "dib32.bmp" };
-	Surface s5 = { "dibr.bmp" };
+	FrameTimer ft;
+	Surface sprite = Surface("link90x90.bmp");
+	Animation link = Animation(90,0,90,90,4,0.16f,sprite);
+	int x = 100;
+	int y = 100;
 	/********************************/
 };

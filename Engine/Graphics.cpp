@@ -252,6 +252,11 @@ Graphics::~Graphics()
 	if( pImmediateContext ) pImmediateContext->ClearState();
 }
 
+RectI Graphics::GetRect()
+{
+	return {0,ScreenWidth,0,ScreenHeight};
+}
+
 void Graphics::EndFrame()
 {
 	HRESULT hr;
@@ -316,17 +321,108 @@ void Graphics::PutPixel( int x,int y,Color c )
 	pSysBuffer[Graphics::ScreenWidth * y + x] = c;
 }
 
-void Graphics::DrawSprite(int x, int y, Surface& surf)
+void Graphics::DrawRect(int x, int y, int width, int height, const Color& c)
 {
-	for (int sy = 0; sy < surf.GetHeight(); sy++)
+	for (int dy = 0; dy < height; dy++)
 	{
-		for (int sx = 0; sx < surf.GetWidth(); sx++)
+		for (int dx = 0; dx < width; dx++)
 		{
-			PutPixel(x + sx, y + sy, surf.GetPixel(sx, sy));
+			PutPixel(x + dx, y + dy, c);
 		}
 	}
 }
 
+void Graphics::DrawSpriteNonChroma(int x, int y, const Surface& surf)
+{
+	DrawSpriteNonChroma(x, y, surf.GetRect(), surf);
+}
+
+void Graphics::DrawSpriteNonChroma(int x, int y, const RectI& srcRect, const Surface& surf)
+{
+	DrawSpriteNonChroma(x, y, GetRect(), srcRect, surf);
+}
+
+void Graphics::DrawSpriteNonChroma(int x, int y, const RectI& clip, RectI srcRect, const Surface& surf)
+{
+	assert(srcRect.left >= 0);
+	assert(srcRect.top >= 0);
+	assert(srcRect.right <= surf.GetWidth());
+	assert(srcRect.bottom <= surf.GetHeight());
+
+	if (x < clip.left)
+	{
+		srcRect.left += clip.left - x;
+		x = clip.left;
+	}
+	if (y < clip.top)
+	{
+		srcRect.top += clip.top - y;
+		y = clip.top;
+	}
+	if (x + srcRect.GetWidth() > clip.right)
+	{
+		srcRect.right -= (x + srcRect.GetWidth()) - clip.right;
+	}
+	if (y + srcRect.GetHeight() > clip.bottom)
+	{
+		srcRect.bottom -= (y + srcRect.GetHeight()) - clip.bottom;
+	}
+	for (int sy = srcRect.top; sy < srcRect.bottom; sy++)
+	{
+		for (int sx = srcRect.left; sx < srcRect.right; sx++)
+		{
+			PutPixel(x + sx - srcRect.left, y + sy - srcRect.top, surf.GetPixel(sx, sy));
+		}
+	}
+}
+
+void Graphics::DrawSprite(int x, int y, const Surface& surf, Color chroma)
+{
+	DrawSprite(x, y, surf.GetRect(), surf, chroma);
+}
+
+void Graphics::DrawSprite(int x, int y, const RectI& srcRect, const Surface& surf, Color chroma)
+{
+	DrawSprite(x, y, GetRect(), srcRect, surf, chroma);
+}
+
+void Graphics::DrawSprite(int x, int y, const RectI& clip, RectI srcRect, const Surface& surf, Color chroma)
+{
+	assert(srcRect.left >= 0);
+	assert(srcRect.top >= 0);
+	assert(srcRect.right <= surf.GetWidth());
+	assert(srcRect.bottom <= surf.GetHeight());
+
+	if (x < clip.left)
+	{
+		srcRect.left += clip.left - x;
+		x = clip.left;
+	}
+	if (y < clip.top)
+	{
+		srcRect.top += clip.top - y;
+		y = clip.top;
+	}
+	if (x + srcRect.GetWidth() > clip.right)
+	{
+		srcRect.right -= (x + srcRect.GetWidth()) - clip.right;
+	}
+	if (y + srcRect.GetHeight() > clip.bottom)
+	{
+		srcRect.bottom -= (y + srcRect.GetHeight()) - clip.bottom;
+	}
+	for (int sy = srcRect.top; sy < srcRect.bottom; sy++)
+	{
+		for (int sx = srcRect.left; sx < srcRect.right; sx++)
+		{
+			const Color c = surf.GetPixel(sx, sy);
+			if (c != chroma)
+			{
+				PutPixel(x + sx - srcRect.left, y + sy - srcRect.top, c);
+			}
+		}
+	}
+}
 
 //////////////////////////////////////////////////
 //           Graphics Exception
