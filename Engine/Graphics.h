@@ -60,12 +60,12 @@ public:
 	}
 	void PutPixel( int x,int y,Color c );
 	void DrawRect(int x, int y, int width, int height, const Color& c);
-	void DrawSpriteNonChroma(int x, int y, const Surface& surf);
-	void DrawSpriteNonChroma(int x, int y, const RectI& srcRect, const Surface& surf);
-	void DrawSpriteNonChroma(int x, int y, const RectI& clip, RectI srcRect, const Surface& surf);
-	void DrawSprite(int x, int y, const Surface& surf, Color chroma = Colors::Magenta);
-	void DrawSprite(int x, int y, const RectI& srcRect, const Surface& surf, Color chroma = Colors::Magenta);
-	void DrawSprite(int x, int y, const RectI& clip, RectI srcRect, const Surface& surf, Color chroma = Colors::Magenta);
+	void DrawSpriteNonChroma(Vei2& pos, const Surface& surf);
+	void DrawSpriteNonChroma(Vei2& pos, const RectI& srcRect, const Surface& surf);
+	void DrawSpriteNonChroma(Vei2& pos, const RectI& clip, RectI srcRect, const Surface& surf);
+	void DrawSprite(Vei2& pos, const Surface& surf, Color chroma = Colors::Magenta);
+	void DrawSprite(Vei2& pos, const RectI& srcRect, const Surface& surf, Color chroma = Colors::Magenta);
+	void DrawSprite(Vei2& pos, const RectI& clip, RectI srcRect, const Surface& surf, Color chroma = Colors::Magenta);
 	~Graphics();
 private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain>				pSwapChain;

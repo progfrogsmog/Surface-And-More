@@ -1,4 +1,5 @@
 #pragma once
+#include "Vei2.h"
 
 class Vec2
 {
@@ -11,6 +12,9 @@ public:
 	Vec2& operator*=( float rhs );
 	Vec2 operator-( const Vec2& rhs ) const;
 	Vec2& operator-=( const Vec2& rhs );
+	bool operator==(const Vec2& rhs);
+	bool operator!=(const Vec2& rhs);
+	explicit operator Vei2() const;
 	float GetLength() const;
 	float GetLengthSq() const;
 	Vec2& Normalize();

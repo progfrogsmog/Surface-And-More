@@ -332,84 +332,80 @@ void Graphics::DrawRect(int x, int y, int width, int height, const Color& c)
 	}
 }
 
-void Graphics::DrawSpriteNonChroma(int x, int y, const Surface& surf)
+void Graphics::DrawSpriteNonChroma(Vei2& pos, const Surface& surf)
 {
-	DrawSpriteNonChroma(x, y, surf.GetRect(), surf);
+	DrawSpriteNonChroma(pos, surf.GetRect(), surf);
 }
-
-void Graphics::DrawSpriteNonChroma(int x, int y, const RectI& srcRect, const Surface& surf)
+void Graphics::DrawSpriteNonChroma(Vei2& pos, const RectI& srcRect, const Surface& surf)
 {
-	DrawSpriteNonChroma(x, y, GetRect(), srcRect, surf);
+	DrawSpriteNonChroma(pos, GetRect(), srcRect, surf);
 }
-
-void Graphics::DrawSpriteNonChroma(int x, int y, const RectI& clip, RectI srcRect, const Surface& surf)
+void Graphics::DrawSpriteNonChroma(Vei2& pos, const RectI& clip, RectI srcRect, const Surface& surf)
 {
 	assert(srcRect.left >= 0);
 	assert(srcRect.top >= 0);
 	assert(srcRect.right <= surf.GetWidth());
 	assert(srcRect.bottom <= surf.GetHeight());
 
-	if (x < clip.left)
+	if (pos.x < clip.left)
 	{
-		srcRect.left += clip.left - x;
-		x = clip.left;
+		srcRect.left += clip.left - pos.x;
+		pos.x = clip.left;
 	}
-	if (y < clip.top)
+	if (pos.y < clip.top)
 	{
-		srcRect.top += clip.top - y;
-		y = clip.top;
+		srcRect.top += clip.top - pos.y;
+		pos.y = clip.top;
 	}
-	if (x + srcRect.GetWidth() > clip.right)
+	if (pos.x + srcRect.GetWidth() > clip.right)
 	{
-		srcRect.right -= (x + srcRect.GetWidth()) - clip.right;
+		srcRect.right -= (pos.x + srcRect.GetWidth()) - clip.right;
 	}
-	if (y + srcRect.GetHeight() > clip.bottom)
+	if (pos.y + srcRect.GetHeight() > clip.bottom)
 	{
-		srcRect.bottom -= (y + srcRect.GetHeight()) - clip.bottom;
+		srcRect.bottom -= (pos.y + srcRect.GetHeight()) - clip.bottom;
 	}
 	for (int sy = srcRect.top; sy < srcRect.bottom; sy++)
 	{
 		for (int sx = srcRect.left; sx < srcRect.right; sx++)
 		{
-			PutPixel(x + sx - srcRect.left, y + sy - srcRect.top, surf.GetPixel(sx, sy));
+			PutPixel(pos.x + sx - srcRect.left, pos.y + sy - srcRect.top, surf.GetPixel(sx, sy));
 		}
 	}
 }
 
-void Graphics::DrawSprite(int x, int y, const Surface& surf, Color chroma)
+void Graphics::DrawSprite(Vei2& pos, const Surface& surf, Color chroma)
 {
-	DrawSprite(x, y, surf.GetRect(), surf, chroma);
+	DrawSprite(pos, surf.GetRect(), surf, chroma);
 }
-
-void Graphics::DrawSprite(int x, int y, const RectI& srcRect, const Surface& surf, Color chroma)
+void Graphics::DrawSprite(Vei2& pos, const RectI& srcRect, const Surface& surf, Color chroma)
 {
-	DrawSprite(x, y, GetRect(), srcRect, surf, chroma);
+	DrawSprite(pos, GetRect(), srcRect, surf, chroma);
 }
-
-void Graphics::DrawSprite(int x, int y, const RectI& clip, RectI srcRect, const Surface& surf, Color chroma)
+void Graphics::DrawSprite(Vei2& pos, const RectI& clip, RectI srcRect, const Surface& surf, Color chroma)
 {
 	assert(srcRect.left >= 0);
 	assert(srcRect.top >= 0);
 	assert(srcRect.right <= surf.GetWidth());
 	assert(srcRect.bottom <= surf.GetHeight());
 
-	if (x < clip.left)
+	if (pos.x < clip.left)
 	{
-		srcRect.left += clip.left - x;
-		x = clip.left;
+		srcRect.left += clip.left - pos.x;
+		pos.x = clip.left;
 	}
-	if (y < clip.top)
+	if (pos.y < clip.top)
 	{
-		srcRect.top += clip.top - y;
-		y = clip.top;
+		srcRect.top += clip.top - pos.y;
+		pos.y = clip.top;
 	}
-	if (x + srcRect.GetWidth() > clip.right)
+	if (pos.x + srcRect.GetWidth() > clip.right)
 	{
-		srcRect.right -= (x + srcRect.GetWidth()) - clip.right;
+		srcRect.right -= (pos.x + srcRect.GetWidth()) - clip.right;
 	}
-	if (y + srcRect.GetHeight() > clip.bottom)
+	if (pos.y + srcRect.GetHeight() > clip.bottom)
 	{
-		srcRect.bottom -= (y + srcRect.GetHeight()) - clip.bottom;
+		srcRect.bottom -= (pos.y + srcRect.GetHeight()) - clip.bottom;
 	}
 	for (int sy = srcRect.top; sy < srcRect.bottom; sy++)
 	{
@@ -418,7 +414,7 @@ void Graphics::DrawSprite(int x, int y, const RectI& clip, RectI srcRect, const 
 			const Color c = surf.GetPixel(sx, sy);
 			if (c != chroma)
 			{
-				PutPixel(x + sx - srcRect.left, y + sy - srcRect.top, c);
+				PutPixel(pos.x + sx - srcRect.left, pos.y + sy - srcRect.top, c);
 			}
 		}
 	}

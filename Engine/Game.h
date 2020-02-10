@@ -26,6 +26,7 @@
 #include "Surface.h"
 #include "FrameTimer.h"
 #include "Animation.h"
+#include "Character.h"
 
 class Game
 {
@@ -46,9 +47,7 @@ private:
 	/********************************/
 	/*  User Variables              */
 	FrameTimer ft;
-	Surface sprite = Surface("link90x90.bmp");
-	Animation link = Animation(90,0,90,90,4,0.16f,sprite);
-	int x = 100;
-	int y = 100;
+	Vec2 vel = { 0,0 };
+	Character link = (Vec2( 100,100 ));
 	/********************************/
 };

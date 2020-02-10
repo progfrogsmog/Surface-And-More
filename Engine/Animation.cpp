@@ -23,9 +23,14 @@ void Animation::Update(float dt)
 	}
 }
 
-void Animation::Draw(int x, int y, Graphics& gfx) const
+void Animation::Draw(Vei2& pos, Graphics& gfx) const
 {
-	gfx.DrawSprite(x, y, frames[nCurFrame], sprite);
+	gfx.DrawSprite(pos, frames[nCurFrame], sprite, chroma);
+}
+
+void Animation::Draw(Vei2& pos, const RectI& clip, Graphics& gfx) const
+{
+	gfx.DrawSprite(pos, clip, frames[nCurFrame], sprite, chroma);
 }
 
 void Animation::Advance()

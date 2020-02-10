@@ -38,12 +38,27 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	x = wnd.mouse.GetPosX();
-	y = wnd.mouse.GetPosY();
-	link.Update(ft.Mark());
+	vel = { 0,0 };
+	if (wnd.kbd.KeyIsPressed(VK_LEFT))
+	{
+		vel.x -= 1;
+	}
+	if (wnd.kbd.KeyIsPressed(VK_RIGHT))
+	{
+		vel.x += 1;
+	}
+	if (wnd.kbd.KeyIsPressed(VK_UP))
+	{
+		vel.y -= 1;
+	}
+	if (wnd.kbd.KeyIsPressed(VK_DOWN))
+	{
+		vel.y += 1;
+	}
+	link.Update(ft.Mark(),vel);
 }
 
 void Game::ComposeFrame()
 {
-	link.Draw(x-30, y-30, gfx);
+	link.Draw(gfx);
 }
