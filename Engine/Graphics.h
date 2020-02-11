@@ -66,6 +66,9 @@ public:
 	void DrawSprite(Vei2& pos, const Surface& surf, Color chroma = Colors::Magenta);
 	void DrawSprite(Vei2& pos, const RectI& srcRect, const Surface& surf, Color chroma = Colors::Magenta);
 	void DrawSprite(Vei2& pos, const RectI& clip, RectI srcRect, const Surface& surf, Color chroma = Colors::Magenta);
+	void DrawSpriteSubstitute(Vei2& pos, const Surface& surf, Color subColor, Color chroma = Colors::Magenta);
+	void DrawSpriteSubstitute(Vei2& pos, const RectI& srcRect, const Surface& surf, Color subColor, Color chroma = Colors::Magenta);
+	void DrawSpriteSubstitute(Vei2& pos, const RectI& clip, RectI srcRect, const Surface& surf, Color subColor, Color chroma = Colors::Magenta);
 	~Graphics();
 private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain>				pSwapChain;

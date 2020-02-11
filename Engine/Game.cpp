@@ -61,4 +61,5 @@ void Game::UpdateModel()
 void Game::ComposeFrame()
 {
 	link.Draw(gfx);
+	myText.Draw(wnd.mouse.GetPos(), Colors::Yellow, gfx);
 }

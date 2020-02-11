@@ -27,6 +27,7 @@
 #include "FrameTimer.h"
 #include "Animation.h"
 #include "Character.h"
+#include "Font.h"
 
 class Game
 {
@@ -49,5 +50,7 @@ private:
 	FrameTimer ft;
 	Vec2 vel = { 0,0 };
 	Character link = (Vec2( 100,100 ));
+	Font myText = Font("My name is Link!", "Fixedsys16x28.bmp", 32, 3, Colors::White);
+	Surface s = Surface("Fixedsys16x28.bmp");
 	/********************************/
 };

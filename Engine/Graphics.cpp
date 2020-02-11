@@ -420,6 +420,54 @@ void Graphics::DrawSprite(Vei2& pos, const RectI& clip, RectI srcRect, const Sur
 	}
 }
 
+void Graphics::DrawSpriteSubstitute(Vei2& pos, const Surface& surf, Color subColor, Color chroma)
+{
+	DrawSpriteSubstitute(pos, surf.GetRect(), surf, subColor, chroma);
+}
+
+void Graphics::DrawSpriteSubstitute(Vei2& pos, const RectI& srcRect, const Surface& surf, Color subColor, Color chroma)
+{
+	DrawSpriteSubstitute(pos, GetRect(), srcRect, surf, subColor, chroma);
+}
+
+void Graphics::DrawSpriteSubstitute(Vei2& pos, const RectI& clip, RectI srcRect, const Surface& surf, Color subColor, Color chroma)
+{
+	assert(srcRect.left >= 0);
+	assert(srcRect.top >= 0);
+	assert(srcRect.right <= surf.GetWidth());
+	assert(srcRect.bottom <= surf.GetHeight());
+
+	if (pos.x < clip.left)
+	{
+		srcRect.left += clip.left - pos.x;
+		pos.x = clip.left;
+	}
+	if (pos.y < clip.top)
+	{
+		srcRect.top += clip.top - pos.y;
+		pos.y = clip.top;
+	}
+	if (pos.x + srcRect.GetWidth() > clip.right)
+	{
+		srcRect.right -= (pos.x + srcRect.GetWidth()) - clip.right;
+	}
+	if (pos.y + srcRect.GetHeight() > clip.bottom)
+	{
+		srcRect.bottom -= (pos.y + srcRect.GetHeight()) - clip.bottom;
+	}
+	for (int sy = srcRect.top; sy < srcRect.bottom; sy++)
+	{
+		for (int sx = srcRect.left; sx < srcRect.right; sx++)
+		{
+			const Color c = surf.GetPixel(sx, sy);
+			if (c != chroma)
+			{
+				PutPixel(pos.x + sx - srcRect.left, pos.y + sy - srcRect.top, subColor);
+			}
+		}
+	}
+}
+
 //////////////////////////////////////////////////
 //           Graphics Exception
 Graphics::Exception::Exception( HRESULT hr,const std::wstring& note,const wchar_t* file,unsigned int line )
