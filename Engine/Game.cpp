@@ -60,6 +60,6 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
-	link.Draw(gfx);
-	myText.Draw(wnd.mouse.GetPos(), Colors::Yellow, gfx);
+	link.DrawGhost(gfx);
+	myText.Draw(Vei2(300,300), "Come over here.\nAnd another Text! :)", Colors::Yellow, gfx);
 }

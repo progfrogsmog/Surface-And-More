@@ -7,16 +7,17 @@
 class Font
 {
 public:
-	Font(const std::string& str, const std::string filename, int charWidth, int charHeight, Color chroma);
-	void Draw(Vei2& pos, const Color& subColor, Graphics& gfx) const;
+	Font(const std::string filename, int charColumns, int charRows, Color chroma);
+	void Draw(Vei2& pos, const std::string& text, const Color& subColor, Graphics& gfx) const;
 private:
-	RectI CalcCharRect(const Vei2& topLeft) const;
+	RectI CalcCharRect(const char& c) const;
 private:
 	const Color chroma;
 	const Surface sprite;
-	std::vector<RectI> text;
 	const int GlyphWidth;
 	const int GlyphHeight;
+	const int charColumns;
+	const int charRows;
 	const char firstChar = ' ';
 	const char lastChar = '~';
 };

@@ -59,6 +59,12 @@ public:
 	{
 		return !(*this == rhs);
 	}
+	void Mix(const Color& c)
+	{
+		SetR((GetR() + c.GetR())/2);
+		SetG((GetG() + c.GetG())/2);
+		SetB((GetB() + c.GetB())/2);
+	}
 	constexpr unsigned char GetX() const
 	{
 		return dword >> 24u;

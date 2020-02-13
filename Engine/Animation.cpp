@@ -28,6 +28,11 @@ void Animation::Draw(Vei2& pos, Graphics& gfx) const
 	gfx.DrawSprite(pos, frames[nCurFrame], sprite, chroma);
 }
 
+void Animation::DrawGhost(Vei2& pos, Graphics& gfx) const
+{
+	gfx.DrawSpriteGhost(pos, frames[nCurFrame], sprite, chroma);
+}
+
 void Animation::Draw(Vei2& pos, const RectI& clip, Graphics& gfx) const
 {
 	gfx.DrawSprite(pos, clip, frames[nCurFrame], sprite, chroma);

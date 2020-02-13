@@ -68,3 +68,8 @@ void Character::Draw(Graphics& gfx) const
 {
 	animations[int(doing)].Draw((Vei2)pos, gfx);
 }
+
+void Character::DrawGhost(Graphics& gfx) const
+{
+	animations[int(doing)].DrawGhost((Vei2)pos, gfx);
+}

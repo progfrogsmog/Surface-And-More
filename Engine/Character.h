@@ -21,6 +21,7 @@ public:
 	Character(Vec2 pos);
 	void Update(float dt, const Vec2 vel);
 	void Draw(Graphics& gfx) const;
+	void DrawGhost(Graphics& gfx) const;
 private:
 	Surface sprite{"link90x90.bmp"};
 	std::vector<Animation> animations;

@@ -9,6 +9,7 @@ public:
 	Animation(int x, int y, int width, int height, int count, float holdTime, const Surface& surf, const Color chroma = Colors::Magenta);
 	void Update(float dt);
 	void Draw(Vei2& pos, Graphics& gfx) const;
+	void DrawGhost(Vei2& pos, Graphics& gfx) const;
 	void Draw(Vei2& pos, const RectI& clip, Graphics& gfx) const;
 private:
 	void Advance();

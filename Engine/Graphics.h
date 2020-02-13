@@ -59,6 +59,7 @@ public:
 		PutPixel( x,y,{ unsigned char( r ),unsigned char( g ),unsigned char( b ) } );
 	}
 	void PutPixel( int x,int y,Color c );
+	Color GetPixel(int x, int y);
 	void DrawRect(int x, int y, int width, int height, const Color& c);
 	void DrawSpriteNonChroma(Vei2& pos, const Surface& surf);
 	void DrawSpriteNonChroma(Vei2& pos, const RectI& srcRect, const Surface& surf);
@@ -69,6 +70,9 @@ public:
 	void DrawSpriteSubstitute(Vei2& pos, const Surface& surf, Color subColor, Color chroma = Colors::Magenta);
 	void DrawSpriteSubstitute(Vei2& pos, const RectI& srcRect, const Surface& surf, Color subColor, Color chroma = Colors::Magenta);
 	void DrawSpriteSubstitute(Vei2& pos, const RectI& clip, RectI srcRect, const Surface& surf, Color subColor, Color chroma = Colors::Magenta);
+	void DrawSpriteGhost(Vei2& pos, const Surface& surf, Color chroma);
+	void DrawSpriteGhost(Vei2& pos, RectI srcRect, const Surface& surf, Color chroma);
+	void DrawSpriteGhost(Vei2& pos, const RectI& clip, RectI srcRect, const Surface& surf, Color chroma);
 	~Graphics();
 private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain>				pSwapChain;

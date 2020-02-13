@@ -1,42 +1,42 @@
 #include "Font.h"
 #include <assert.h>
 
-Font::Font(const std::string& str, const std::string filename, int charWidth, int charHeight, Color chroma)
+Font::Font(const std::string filename, int charColumns, int charRows, Color chroma)
 	:
 	sprite(filename),
 	chroma(chroma),
-	GlyphWidth(sprite.GetWidth()/charWidth),
-	GlyphHeight(sprite.GetHeight()/charHeight)
+	GlyphWidth(sprite.GetWidth()/charColumns),
+	GlyphHeight(sprite.GetHeight()/charRows),
+	charColumns(charColumns),
+	charRows(charRows)
 {
-	assert(sprite.GetWidth() == GlyphWidth * charWidth);
-	assert(sprite.GetHeight() == GlyphHeight * charHeight);
-	text.reserve(str.size());
+	assert(sprite.GetWidth() == GlyphWidth * charColumns);
+	assert(sprite.GetHeight() == GlyphHeight * charRows);
+}
 
-	for (int i = 0; i < str.size(); i++)
+void Font::Draw(Vei2& pos, const std::string& text, const Color& subColor, Graphics& gfx) const
+{
+	Vei2 curPos = pos;
+	for (char c : text)
 	{
-		char c = str[i];
-		if (c >= firstChar + 1 && c <= lastChar)
+		if (c == '\n')
 		{
-			int charIndex = c - firstChar;
-			int top = charIndex / charWidth;
-			int left = charIndex % charWidth;
-			text.emplace_back(CalcCharRect(Vei2(left * GlyphWidth, top * GlyphHeight)));//SHIT LEFT,TOP
+			curPos.x = pos.x;
+			curPos.y += GlyphHeight;
 			continue;
 		}
-		text.emplace_back(CalcCharRect(Vei2(0,0)));
+		if (c >= firstChar + 1 && c <= lastChar)
+		{
+			gfx.DrawSpriteSubstitute(curPos, CalcCharRect(c), sprite, subColor, chroma);
+		}
+		curPos.x += GlyphWidth;
 	}
 }
 
-void Font::Draw(Vei2& pos, const Color& subColor, Graphics& gfx) const
+RectI Font::CalcCharRect(const char& c) const
 {
-	for (int i = 0; i < text.size(); i++)
-	{
-		gfx.DrawSpriteSubstitute(pos, text[i], sprite, subColor, chroma);
-		pos.x += GlyphWidth;
-	}
-}
-
-RectI Font::CalcCharRect(const Vei2& topLeft) const
-{
-	return RectI(topLeft,GlyphWidth,GlyphHeight);
+	int charIndex = c - firstChar;
+	int top = charIndex / charColumns;
+	int left = charIndex % charColumns;
+	return RectI(Vei2(left*GlyphWidth,top*GlyphHeight),GlyphWidth,GlyphHeight);
 }
