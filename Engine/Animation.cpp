@@ -1,4 +1,5 @@
 #include "Animation.h"
+#include "SpriteEffect.h"
 
 Animation::Animation(int x, int y, int width, int height, int count, float holdTime, const Surface& surf, const Color chroma)
 	:
@@ -25,17 +26,17 @@ void Animation::Update(float dt)
 
 void Animation::Draw(Vei2& pos, Graphics& gfx) const
 {
-	gfx.DrawSprite(pos, frames[nCurFrame], sprite, chroma);
+	gfx.DrawSprite(pos, frames[nCurFrame], sprite, SpriteEffect::Chroma(chroma));
 }
 
 void Animation::DrawGhost(Vei2& pos, Graphics& gfx) const
 {
-	gfx.DrawSpriteGhost(pos, frames[nCurFrame], sprite, chroma);
+	gfx.DrawSprite(pos, frames[nCurFrame], sprite, SpriteEffect::Ghost(chroma));
 }
 
 void Animation::Draw(Vei2& pos, const RectI& clip, Graphics& gfx) const
 {
-	gfx.DrawSprite(pos, clip, frames[nCurFrame], sprite, chroma);
+	gfx.DrawSprite(pos, clip, frames[nCurFrame], sprite, SpriteEffect::Chroma(chroma));
 }
 
 void Animation::Advance()

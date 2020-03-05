@@ -38,6 +38,7 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	float dt = ft.Mark();
 	vel = { 0,0 };
 	if (wnd.kbd.KeyIsPressed(VK_LEFT))
 	{
@@ -55,11 +56,39 @@ void Game::UpdateModel()
 	{
 		vel.y += 1;
 	}
-	link.Update(ft.Mark(),vel);
+
+	//test for key is pressed
+	if (!wnd.kbd.KeyIsEmpty())
+	{
+		gfx.DrawRect(500, 500, 10, 10, Colors::Red);
+
+		const Keyboard::Event e = wnd.kbd.ReadKey();
+		if (e.IsPress())
+		{
+			input.UpdateText(e.GetCode());
+		}
+	}
+
+	//test for mouseEvent and call inputWindow
+	if (wnd.mouse.LeftIsPressed() && leftMouseReleased)
+	{
+		input.OnClick(wnd.mouse.GetPos());
+		leftMouseReleased = false;
+	}
+	else if(!wnd.mouse.LeftIsPressed())
+	{
+		leftMouseReleased = true;
+	}
+
+	link.Update(dt,vel);
+	fps.Update(dt);
+	input.Update(dt);
 }
 
 void Game::ComposeFrame()
 {
-	link.DrawGhost(gfx);
-	myText.Draw(Vei2(300,300), "Come over here.\nAnd another Text! :)", Colors::Yellow, gfx);
+	//myText.Draw(Vei2(300,300), "Come over here.\nAnd another Text! :)", Colors::Yellow, gfx);
+	fps.Draw(Vei2(750, 10), Colors::Green, gfx);
+	link.Draw(gfx);
+	input.Draw(gfx);
 }

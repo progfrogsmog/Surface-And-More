@@ -1,5 +1,6 @@
 #include "Font.h"
 #include <assert.h>
+#include "SpriteEffect.h"
 
 Font::Font(const std::string filename, int charColumns, int charRows, Color chroma)
 	:
@@ -27,10 +28,20 @@ void Font::Draw(Vei2& pos, const std::string& text, const Color& subColor, Graph
 		}
 		if (c >= firstChar + 1 && c <= lastChar)
 		{
-			gfx.DrawSpriteSubstitute(curPos, CalcCharRect(c), sprite, subColor, chroma);
+			gfx.DrawSprite(curPos, CalcCharRect(c), sprite, SpriteEffect::Substitute(chroma,subColor));
 		}
 		curPos.x += GlyphWidth;
 	}
+}
+
+int Font::GetGlyphWidth()
+{
+	return GlyphWidth;
+}
+
+int Font::GetGlyphHeight()
+{
+	return GlyphHeight;
 }
 
 RectI Font::CalcCharRect(const char& c) const

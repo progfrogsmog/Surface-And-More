@@ -22,7 +22,6 @@
 #include "Graphics.h"
 #include "DXErr.h"
 #include "ChiliException.h"
-#include <assert.h>
 #include <string>
 #include <array>
 
@@ -337,183 +336,70 @@ void Graphics::DrawRect(int x, int y, int width, int height, const Color& c)
 	}
 }
 
-void Graphics::DrawSpriteNonChroma(Vei2& pos, const Surface& surf)
+void Graphics::DrawCircle(const Vei2& posCenter, int radius, const Color& c)
 {
-	DrawSpriteNonChroma(pos, surf.GetRect(), surf);
-}
-void Graphics::DrawSpriteNonChroma(Vei2& pos, const RectI& srcRect, const Surface& surf)
-{
-	DrawSpriteNonChroma(pos, GetRect(), srcRect, surf);
-}
-void Graphics::DrawSpriteNonChroma(Vei2& pos, const RectI& clip, RectI srcRect, const Surface& surf)
-{
-	assert(srcRect.left >= 0);
-	assert(srcRect.top >= 0);
-	assert(srcRect.right <= surf.GetWidth());
-	assert(srcRect.bottom <= surf.GetHeight());
-
-	if (pos.x < clip.left)
+	Vei2 curPos;
+	int blah = radius * radius;
+	for (curPos.y = - radius; curPos.y < radius; curPos.y++)
 	{
-		srcRect.left += clip.left - pos.x;
-		pos.x = clip.left;
-	}
-	if (pos.y < clip.top)
-	{
-		srcRect.top += clip.top - pos.y;
-		pos.y = clip.top;
-	}
-	if (pos.x + srcRect.GetWidth() > clip.right)
-	{
-		srcRect.right -= (pos.x + srcRect.GetWidth()) - clip.right;
-	}
-	if (pos.y + srcRect.GetHeight() > clip.bottom)
-	{
-		srcRect.bottom -= (pos.y + srcRect.GetHeight()) - clip.bottom;
-	}
-	for (int sy = srcRect.top; sy < srcRect.bottom; sy++)
-	{
-		for (int sx = srcRect.left; sx < srcRect.right; sx++)
+		for (curPos.x = - radius; curPos.x < radius; curPos.x++)
 		{
-			PutPixel(pos.x + sx - srcRect.left, pos.y + sy - srcRect.top, surf.GetPixel(sx, sy));
-		}
-	}
-}
-
-void Graphics::DrawSprite(Vei2& pos, const Surface& surf, Color chroma)
-{
-	DrawSprite(pos, surf.GetRect(), surf, chroma);
-}
-void Graphics::DrawSprite(Vei2& pos, const RectI& srcRect, const Surface& surf, Color chroma)
-{
-	DrawSprite(pos, GetRect(), srcRect, surf, chroma);
-}
-void Graphics::DrawSprite(Vei2& pos, const RectI& clip, RectI srcRect, const Surface& surf, Color chroma)
-{
-	assert(srcRect.left >= 0);
-	assert(srcRect.top >= 0);
-	assert(srcRect.right <= surf.GetWidth());
-	assert(srcRect.bottom <= surf.GetHeight());
-
-	if (pos.x < clip.left)
-	{
-		srcRect.left += clip.left - pos.x;
-		pos.x = clip.left;
-	}
-	if (pos.y < clip.top)
-	{
-		srcRect.top += clip.top - pos.y;
-		pos.y = clip.top;
-	}
-	if (pos.x + srcRect.GetWidth() > clip.right)
-	{
-		srcRect.right -= (pos.x + srcRect.GetWidth()) - clip.right;
-	}
-	if (pos.y + srcRect.GetHeight() > clip.bottom)
-	{
-		srcRect.bottom -= (pos.y + srcRect.GetHeight()) - clip.bottom;
-	}
-	for (int sy = srcRect.top; sy < srcRect.bottom; sy++)
-	{
-		for (int sx = srcRect.left; sx < srcRect.right; sx++)
-		{
-			const Color c = surf.GetPixel(sx, sy);
-			if (c != chroma)
+			if (blah > curPos.GetLengthSq())
 			{
-				PutPixel(pos.x + sx - srcRect.left, pos.y + sy - srcRect.top, c);
+				PutPixel(posCenter.x + curPos.x, posCenter.y + curPos.y, c);
 			}
 		}
 	}
 }
 
-void Graphics::DrawSpriteSubstitute(Vei2& pos, const Surface& surf, Color subColor, Color chroma)
+void Graphics::DrawLine(Vei2 pos1, Vei2 pos2, const Color& c)
 {
-	DrawSpriteSubstitute(pos, surf.GetRect(), surf, subColor, chroma);
-}
-void Graphics::DrawSpriteSubstitute(Vei2& pos, const RectI& srcRect, const Surface& surf, Color subColor, Color chroma)
-{
-	DrawSpriteSubstitute(pos, GetRect(), srcRect, surf, subColor, chroma);
-}
-void Graphics::DrawSpriteSubstitute(Vei2& pos, const RectI& clip, RectI srcRect, const Surface& surf, Color subColor, Color chroma)
-{
-	assert(srcRect.left >= 0);
-	assert(srcRect.top >= 0);
-	assert(srcRect.right <= surf.GetWidth());
-	assert(srcRect.bottom <= surf.GetHeight());
-
-	if (pos.x < clip.left)
+	//yDist or xDist greater?
+	Vei2 dist;
+	dist.x = pos1.x - pos2.x;
+	dist.y = pos1.y - pos2.y;
+	if (dist.x < 0)
 	{
-		srcRect.left += clip.left - pos.x;
-		pos.x = clip.left;
-	}
-	if (pos.y < clip.top)
-	{
-		srcRect.top += clip.top - pos.y;
-		pos.y = clip.top;
-	}
-	if (pos.x + srcRect.GetWidth() > clip.right)
-	{
-		srcRect.right -= (pos.x + srcRect.GetWidth()) - clip.right;
-	}
-	if (pos.y + srcRect.GetHeight() > clip.bottom)
-	{
-		srcRect.bottom -= (pos.y + srcRect.GetHeight()) - clip.bottom;
-	}
-	for (int sy = srcRect.top; sy < srcRect.bottom; sy++)
-	{
-		for (int sx = srcRect.left; sx < srcRect.right; sx++)
+		dist.x = -dist.x;
+	}												
+	if (dist.y < 0)									
+	{												
+		dist.y = -dist.y;							
+	}												
+	if (dist.x > dist.y)//for every X*				
+	{												
+		if (pos1.x > pos2.x)						
+		{											
+			Vei2 temp = pos1;						
+			pos1 = pos2;							
+			pos2 = temp;							
+		}											
+		if (pos1.y > pos2.y)//Warning possible error
 		{
-			const Color c = surf.GetPixel(sx, sy);
-			if (c != chroma)
-			{
-				PutPixel(pos.x + sx - srcRect.left, pos.y + sy - srcRect.top, subColor);
-			}
+			dist.y = -dist.y;
+		}
+		for (int i = 0; i < dist.x; i++)
+		{
+			int calcMe = (dist.y * i) / dist.x;
+			PutPixel(pos1.x + i, pos1.y + calcMe, c);
 		}
 	}
-}
-
-void Graphics::DrawSpriteGhost(Vei2& pos, const Surface& surf, Color chroma)
-{
-	DrawSpriteGhost(pos, surf.GetRect(), surf, chroma);
-}
-void Graphics::DrawSpriteGhost(Vei2& pos, RectI srcRect, const Surface& surf, Color chroma)
-{
-	DrawSpriteGhost(pos, GetRect(), srcRect, surf, chroma);
-}
-void Graphics::DrawSpriteGhost(Vei2& pos, const RectI& clip, RectI srcRect, const Surface& surf, Color chroma)
-{
-	assert(srcRect.left >= 0);
-	assert(srcRect.top >= 0);
-	assert(srcRect.right <= surf.GetWidth());
-	assert(srcRect.bottom <= surf.GetHeight());
-
-	if (pos.x < clip.left)
+	else
 	{
-		srcRect.left += clip.left - pos.x;
-		pos.x = clip.left;
-	}
-	if (pos.y < clip.top)
-	{
-		srcRect.top += clip.top - pos.y;
-		pos.y = clip.top;
-	}
-	if (pos.x + srcRect.GetWidth() > clip.right)
-	{
-		srcRect.right -= (pos.x + srcRect.GetWidth()) - clip.right;
-	}
-	if (pos.y + srcRect.GetHeight() > clip.bottom)
-	{
-		srcRect.bottom -= (pos.y + srcRect.GetHeight()) - clip.bottom;
-	}
-	for (int sy = srcRect.top; sy < srcRect.bottom; sy++)
-	{
-		for (int sx = srcRect.left; sx < srcRect.right; sx++)
+		if (pos1.y > pos2.y)
 		{
-			Color c = surf.GetPixel(sx, sy);
-			if (c != chroma)
-			{
-				c.Mix(GetPixel(pos.x + sx - srcRect.left, pos.y + sy - srcRect.top));
-				PutPixel(pos.x + sx - srcRect.left, pos.y + sy - srcRect.top, c);
-			}
+			Vei2 temp = pos1;
+			pos1 = pos2;
+			pos2 = temp;
+		}
+		if (pos1.x > pos2.x)//Warning possible error
+		{
+			dist.x = -dist.x;
+		}
+		for (int i = 0; i < dist.y; i++)
+		{
+			int calcMe = (dist.x * i) / dist.y;
+			PutPixel(pos1.x + calcMe, pos1.y + i, c);
 		}
 	}
 }

@@ -25,7 +25,8 @@
 #include "ChiliException.h"
 #include "Colors.h"
 #include "Surface.h"
-#include "RectI.h"
+#include "Rect.h"
+#include <cassert>
 
 class Graphics
 {
@@ -61,18 +62,58 @@ public:
 	void PutPixel( int x,int y,Color c );
 	Color GetPixel(int x, int y);
 	void DrawRect(int x, int y, int width, int height, const Color& c);
-	void DrawSpriteNonChroma(Vei2& pos, const Surface& surf);
-	void DrawSpriteNonChroma(Vei2& pos, const RectI& srcRect, const Surface& surf);
-	void DrawSpriteNonChroma(Vei2& pos, const RectI& clip, RectI srcRect, const Surface& surf);
-	void DrawSprite(Vei2& pos, const Surface& surf, Color chroma = Colors::Magenta);
-	void DrawSprite(Vei2& pos, const RectI& srcRect, const Surface& surf, Color chroma = Colors::Magenta);
-	void DrawSprite(Vei2& pos, const RectI& clip, RectI srcRect, const Surface& surf, Color chroma = Colors::Magenta);
-	void DrawSpriteSubstitute(Vei2& pos, const Surface& surf, Color subColor, Color chroma = Colors::Magenta);
-	void DrawSpriteSubstitute(Vei2& pos, const RectI& srcRect, const Surface& surf, Color subColor, Color chroma = Colors::Magenta);
-	void DrawSpriteSubstitute(Vei2& pos, const RectI& clip, RectI srcRect, const Surface& surf, Color subColor, Color chroma = Colors::Magenta);
-	void DrawSpriteGhost(Vei2& pos, const Surface& surf, Color chroma);
-	void DrawSpriteGhost(Vei2& pos, RectI srcRect, const Surface& surf, Color chroma);
-	void DrawSpriteGhost(Vei2& pos, const RectI& clip, RectI srcRect, const Surface& surf, Color chroma);
+	void DrawCircle(const Vei2& posCenter, int radius, const Color& c);
+	void DrawLine(Vei2 pos1, Vei2 pos2, const Color& c);
+	template<typename E>
+	void DrawSprite(Vei2& pos, const Surface& surf, E effect)
+	{
+		DrawSprite(pos, surf.GetRect(), surf, effect);
+	}
+	template<typename E>
+	void DrawSprite(Vei2& pos, const RectI& srcRect, const Surface& surf, E effect)
+	{
+		DrawSprite(pos, GetRect(), srcRect, surf, effect);
+	}
+	template<typename E>
+	void DrawSprite(Vei2& pos, const RectI& clip, RectI srcRect, const Surface& surf, E effect)
+	{
+		assert(srcRect.left >= 0);
+		assert(srcRect.top >= 0);
+		assert(srcRect.right <= surf.GetWidth());
+		assert(srcRect.bottom <= surf.GetHeight());
+
+		if (pos.x < clip.left)
+		{
+			srcRect.left += clip.left - pos.x;
+			pos.x = clip.left;
+		}
+		if (pos.y < clip.top)
+		{
+			srcRect.top += clip.top - pos.y;
+			pos.y = clip.top;
+		}
+		if (pos.x + srcRect.GetWidth() > clip.right)
+		{
+			srcRect.right -= (pos.x + srcRect.GetWidth()) - clip.right;
+		}
+		if (pos.y + srcRect.GetHeight() > clip.bottom)
+		{
+			srcRect.bottom -= (pos.y + srcRect.GetHeight()) - clip.bottom;
+		}
+		for (int sy = srcRect.top; sy < srcRect.bottom; sy++)
+		{
+			for (int sx = srcRect.left; sx < srcRect.right; sx++)
+			{
+				effect(
+					Vei2(pos.x + sx - srcRect.left, pos.y + sy - srcRect.top),
+					surf.GetPixel(sx, sy),
+					*this
+				);
+			}
+		}
+	}
+
+
 	~Graphics();
 private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain>				pSwapChain;

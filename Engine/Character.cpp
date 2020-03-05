@@ -66,7 +66,7 @@ void Character::Update(float dt, const Vec2 vel)
 
 void Character::Draw(Graphics& gfx) const
 {
-	animations[int(doing)].Draw((Vei2)pos, gfx);
+	animations[int(doing)].Draw(Vei2(pos), gfx);
 }
 
 void Character::DrawGhost(Graphics& gfx) const

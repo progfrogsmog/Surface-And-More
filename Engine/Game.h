@@ -28,6 +28,9 @@
 #include "Animation.h"
 #include "Character.h"
 #include "Font.h"
+#include "FPS.h"
+#include "Simulation.h"
+#include "InWnd.h"
 
 class Game
 {
@@ -47,9 +50,12 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
+	bool leftMouseReleased = true;
 	FrameTimer ft;
 	Vec2 vel = { 0,0 };
 	Character link = (Vec2( 100,100 ));
 	Font myText = Font("Fixedsys16x28.bmp", 32, 3, Colors::White);
+	FPS fps = FPS(myText);
+	InWnd input = InWnd(Vei2(333, 333), 200, myText);
 	/********************************/
 };
